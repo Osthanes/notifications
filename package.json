@@ -8,7 +8,10 @@
   "dependencies": {
     "mocha": "*",
     "should": "*",
+<<<<<<< HEAD
     "btoa": "*",
+=======
+>>>>>>> 1d18891a5cc5c41e31d947c1bebed0839c30edcc
     "nconf":  "*",
     "validator": "*",
     "jquery":"*",
