@@ -23,7 +23,7 @@ var notificationParams = {};
 /**
  * notifications.getRecipients
  *
- * @description Get the body of the recipients.
+ * @description Get the recipients.
  * @param {object|String}
  *            notificationParams The input parameters
  * @param {function}
@@ -31,20 +31,20 @@ var notificationParams = {};
  * @returns HOT {*}
  */
 var getRecipients = function(notificationParams) {
-	theRecipients = "\"recipients\": [ ";
+	theRecipients = "";
 	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
-		theRecipients = theRecipients + "\""+ notificationParams.recipient_info[i] + "\"";
+		theRecipients = theRecipients + notificationParams.recipient_info[i];
 		if ( i < notificationParams.recipient_info.length - 1 ) {
 			theRecipients = theRecipients + ",";
 		}
 	}
-	return theRecipients + "],";
+	return theRecipients;
 };
 
 /**
  * notifications.getBodyForNotifications
  *
- * @description Get the body of the Notification.
+ * @description Get body of the Notification.
  * @param {object|String}
  *            notificationParams The input parameters
  * @param {function}
@@ -52,68 +52,160 @@ var getRecipients = function(notificationParams) {
  * @returns HOT {*}
  */
  var getBodyForNotifications = function(notificationParams) {
-    theBody =  "{"
-               + "\"channel\": \""+ notificationParams.channel_type + "\","
-               + getRecipients(notificationParams)
-     + "\"payload\": \""+ notificationParams.payload_info + "\"";
-    if (( notificationParams.channel_type === "email")) {
-        theBody = theBody
-               + ",\"options\": {"
-               + "\"subject\": \""+ notificationParams.subject_info + "\","
-               + "\"ibmid\": "+ notificationParams.ibmid
-        + "}";
-    }
-    theBody = theBody + "}";
-    return theBody;
+    return {
+        "channel": notificationParams.channel_type,
+        "recipients": [ getRecipients(notificationParams) ],
+        "payload": notificationParams.payload_info,
+        "options": {
+            "subject": notificationParams.subject_info,
+            "ibmid": notificationParams.ibmid
+        } 
+    };
 };
 
-describe('Send notifications for email', function(){
-    it('if one or more email addresses are specified', function(){
-        if ( process.env.EMAIL ) {
-            console.log("Hello World");
-            console.log("EMAIL is "+process.env.EMAIL);
-            notificationParams.channel_type = "email";
-            notificationParams.recipient_info = process.env.EMAIL.split(",");
-            notificationParams.payload_info = process.env.MESSAGE;
-            notificationParams.subject_info = process.env.SUBJECT;
-            if (process.env.IBM_ID_LOOKUP) {
-                notificationParams.ibmid = Boolean (process.env.IBM_ID_LOOKUP);
-            } else {
-                notificationParams.ibmid = false;
-            }
+
+getEmailNotificationParms = function(notificationParams) {
+    notificationParams.channel_type = "email";
+    notificationParams.recipient_info = process.env.EMAIL_ADDRESS.split(",");
+    notificationParams.payload_info = process.env.MESSAGE;
+    notificationParams.subject_info = process.env.SUBJECT;
+    if (process.env.IBM_ID_LOOKUP) {
+        notificationParams.ibmid = Boolean (process.env.IBM_ID_LOOKUP);
+    } else {
+        notificationParams.ibmid = false;
+    }
+    return notificationParams;
+};
+
+getVoiceNotificationParms = function(notificationParams) {
+    notificationParams.channel_type = "voice";
+    notificationParams.recipient_info = process.env.PHONE_NUMBER.split(",");
+    notificationParams.payload_info = process.env.MESSAGE;
+    return notificationParams;
+}
+
+getTextNotificationParms = function(notificationParams) {
+    notificationParams.channel_type = "sms";
+    notificationParams.recipient_info = process.env.TEXT_NUMBER.split(",");
+    notificationParams.payload_info = process.env.MESSAGE;
+    return notificationParams;
+}
+
+getURL = function() {
+    return "https://notify-test.services.ibmserviceengage.com/api/send/v1";
+}
+
+
+getAuthentication = function() {
+    var userId = "test2/fihhohnycvic";
+    var password = "yrxZxgRBtCqCcCNOQwvHELtMVwwazDyt";
+    return btoa(userId + ":" + password);
+}
+
+describe('Send notifications', function(){
+
+    this.timeout(100000);
+    if ( process.env.EMAIL_ADDRESS ) {
+        it('One or more email addresses are specified', function(done){
+            console.log("EMAIL_ADDRESS is " + process.env.EMAIL_ADDRESS);
+            notificationParams = getEmailNotificationParms(notificationParams);
 
             describe('the JSON is created and set to the server', function() {
-                console.log ("starting JSON");
-                var url= "https://notify-test.services.ibmserviceengage.com/api/send/v1";
-                var userId = "test2/fihhohnycvic";
-                var password = "yrxZxgRBtCqCcCNOQwvHELtMVwwazDyt";
-                var auth = btoa(userId + ":" + password);
                 var options = {
-                    url: url,
+                    url: getURL(),
                     body: getBodyForNotifications(notificationParams),
-                    headers: {"Content-Type": "application/json", "Accept": "application/json", "Authentication": "Basic " + auth},
+     		        headers: {
+    		            'Content-Type': 'application/json',
+    		            'authorization': "Basic " + getAuthentication()
+    		        },
                     rejectUnauthorized: false,
-                    method: "POST"
+    		        method: 'POST',
+    		        json:true
                 };
-                console.log("here is my auth: " + auth);
-                console.log("here is my options" + options);
-                console.log("body" + options.body);
-
-                //console.log("options:" + options)
-            callback =  function (error, response, body) {
-                    console.log("here I am");
+                callback =  function (error, response, body) {
                     console.log(response.statusCode);
                     console.log(body);
-                    assert.equal(error, undefined ,"error " + error + " returned when creating email notification " + url);
-                    assert.equal(response.statusCode, 200, "expected 200 return code from " + url + " but got " + response.statusCode + ", " + body);
+                    assert.equal(error, undefined ,"error " + error + " returned when creating email notification " + getURL());
+                    assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
+                    done();
                 };
-                console.log("Before request");
                 request(options,callback);
 
-                it('the notifications return with success', function(){});
-            });
-        }
-    });
+                it('the notifications return with success', function(done){
+
+                    done();
+                });
+           });
+        });
+    };
+
+    if ( process.env.PHONE_NUMBER ) {
+        it('One or more phone number are specified', function(done){
+            console.log("PHONE_NUMBER: " + process.env.PHONE_NUMBER);
+            notificationParams = getVoiceNotificationParms(notificationParams);
+
+            describe('the JSON is created and set to the server', function() {
+                var options = {
+                    url: getURL(),
+                    body: getBodyForNotifications(notificationParams),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': "Basic " + getAuthentication()
+                    },
+                    rejectUnauthorized: false,
+                    method: 'POST',
+                    json:true
+                };
+                callback =  function (error, response, body) {
+                    console.log(response.statusCode);
+                    console.log(body);
+                    assert.equal(error, undefined ,"error " + error + " returned when creating voice notification " + getURL());
+                    assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
+                    done();
+                };
+                request(options,callback);
+
+                it('the notifications return with success', function(done){
+                    done();
+                });
+           });
+        });
+    }
+
+    if ( process.env.TEXT_NUMBER ) {
+        it('One or more text number are specified', function(done){
+            console.log("TEXT_NUMBER: " + process.env.TEXT_NUMBER);
+            notificationParams = getTextNotificationParms(notificationParams);
+
+            describe('the JSON is created and set to the server', function() {
+                var options = {
+                    url: getURL(),
+                    body: getBodyForNotifications(notificationParams),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': "Basic " + getAuthentication()
+                    },
+                    rejectUnauthorized: false,
+                    method: 'POST',
+                    json:true
+                };
+                callback =  function (error, response, body) {
+                    console.log(response.statusCode);
+                    console.log(body);
+                    assert.equal(error, undefined ,"error " + error + " returned when creating text notification " + getURL());
+                    assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
+                    done();
+                };
+                request(options,callback);
+
+                it('the notifications return with success', function(done){
+
+                    done();
+                });
+           });
+        });
+    };
+
 });
 
 
