@@ -66,9 +66,13 @@ var getRecipients = function(notificationParams) {
 
 getEmailNotificationParms = function(notificationParams) {
     notificationParams.channel_type = "email";
-    notificationParams.recipient_info = process.env.EMAIL_ADDRESS.split(",");
+    notificationParams.recipient_info = process.env.EMAIL.split(",");
     notificationParams.payload_info = process.env.MESSAGE;
-    notificationParams.subject_info = process.env.SUBJECT;
+    if (process.env.SUBJECT) {
+        notificationParams.subject_info = process.env.SUBJECT;
+    } else {
+        notificationParams.subject_info = "Notification"
+    }
     if (process.env.IBM_ID_LOOKUP) {
         notificationParams.ibmid = Boolean (process.env.IBM_ID_LOOKUP);
     } else {
@@ -79,14 +83,14 @@ getEmailNotificationParms = function(notificationParams) {
 
 getVoiceNotificationParms = function(notificationParams) {
     notificationParams.channel_type = "voice";
-    notificationParams.recipient_info = process.env.PHONE_NUMBER.split(",");
+    notificationParams.recipient_info = process.env.PHONE.split(",");
     notificationParams.payload_info = process.env.MESSAGE;
     return notificationParams;
 }
 
 getTextNotificationParms = function(notificationParams) {
     notificationParams.channel_type = "sms";
-    notificationParams.recipient_info = process.env.TEXT_NUMBER.split(",");
+    notificationParams.recipient_info = process.env.TXT.split(",");
     notificationParams.payload_info = process.env.MESSAGE;
     return notificationParams;
 }
@@ -105,9 +109,9 @@ getAuthentication = function() {
 describe('Send notifications', function(){
 
     this.timeout(100000);
-    if ( process.env.EMAIL_ADDRESS ) {
+    if ( process.env.EMAIL ) {
         it('One or more email addresses are specified', function(done){
-            console.log("EMAIL_ADDRESS is " + process.env.EMAIL_ADDRESS);
+            console.log("EMAIL is " + process.env.EMAIL);
             notificationParams = getEmailNotificationParms(notificationParams);
             
             describe('the JSON is created and set to the server', function() {
@@ -142,9 +146,9 @@ describe('Send notifications', function(){
     }
 
 
-    if ( process.env.PHONE_NUMBER ) {
+    if ( process.env.PHONE ) {
         it('One or more phone number are specified', function(done){
-            console.log("PHONE_NUMBER: " + process.env.PHONE_NUMBER);
+            console.log("PHONE: " + process.env.PHONE);
             notificationParams = getVoiceNotificationParms(notificationParams);
 
             describe('the JSON is created and set to the server', function() {
@@ -177,9 +181,9 @@ describe('Send notifications', function(){
         it('No phone numbers specified', function(done) {done();});
     }
 
-    if ( process.env.TEXT_NUMBER ) {
+    if ( process.env.TXT ) {
         it('One or more text number are specified', function(done){
-            console.log("TEXT_NUMBER: " + process.env.TEXT_NUMBER);
+            console.log("TXT: " + process.env.TXT);
             notificationParams = getTextNotificationParms(notificationParams);
 
             describe('the JSON is created and set to the server', function() {
