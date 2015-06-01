@@ -109,18 +109,18 @@ describe('Send notifications', function(){
         it('One or more email addresses are specified', function(done){
             console.log("EMAIL_ADDRESS is " + process.env.EMAIL_ADDRESS);
             notificationParams = getEmailNotificationParms(notificationParams);
-
+            
             describe('the JSON is created and set to the server', function() {
                 var options = {
                     url: getURL(),
                     body: getBodyForNotifications(notificationParams),
-     		        headers: {
-    		            'Content-Type': 'application/json',
-    		            'authorization': "Basic " + getAuthentication()
-    		        },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': "Basic " + getAuthentication()
+                    },
                     rejectUnauthorized: false,
-    		        method: 'POST',
-    		        json:true
+                    method: 'POST',
+                    json:true
                 };
                 callback =  function (error, response, body) {
                     console.log(response.statusCode);
@@ -135,9 +135,12 @@ describe('Send notifications', function(){
 
                     done();
                 });
-           });
+            });
         });
-    };
+    } else {
+        it('No email addresses specified', function(done) {done();});
+    }
+
 
     if ( process.env.PHONE_NUMBER ) {
         it('One or more phone number are specified', function(done){
@@ -170,6 +173,8 @@ describe('Send notifications', function(){
                 });
            });
         });
+    } else {
+        it('No phone numbers specified', function(done) {done();});
     }
 
     if ( process.env.TEXT_NUMBER ) {
@@ -204,7 +209,9 @@ describe('Send notifications', function(){
                 });
            });
         });
-    };
+    } else {
+        it('No text numbers specified', function(done) {done();});
+    }
 
 });
 
