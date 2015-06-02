@@ -64,6 +64,14 @@ if [ -n $EXT_DIR ]; then
     export PATH=$EXT_DIR:$PATH
 fi 
 
+#########################################
+# Configure log file to store errors  #
+#########################################
+if [ -z "$ERROR_LOG_FILE" ]; then
+    ERROR_LOG_FILE="${EXT_DIR}/errors.log"
+    export ERROR_LOG_FILE
+fi
+
 ################################
 # Setup archive information    #
 ################################
@@ -232,37 +240,105 @@ else
     ice info 2> /dev/null
 fi 
 
+########################
+# Setup git_retry      #
+########################
+source ${EXT_DIR}/git_util.sh
+
+################################
+# get the extensions utilities #
+################################
+pushd . >/dev/null
+cd $EXT_DIR 
+git_retry clone https://github.com/Osthanes/utilities.git utilities
+popd >/dev/null
+
+############################
+# enable logging to logmet #
+############################
+source $EXT_DIR/utilities/logging_utils.sh
+setup_met_logging "${BLUEMIX_USER}" "${BLUEMIX_PASSWORD}" "${BLUEMIX_SPACE}" "${BLUEMIX_ORG}" "${BLUEMIX_TARGET}"
+
+##################################
+# check environment properties   #
+##################################
+
+if [ -z $EMAIL ] || [ -z $EMAIL ] || [ -z $EMAIL ]; then 
+    echo -e "${red}In order to send a notification, you need to provide a Phone Number, Text Number or Email Address" | tee -a "$ERROR_LOG_FILE"
+    echo -e "${red}Please set Phone Number, Text Number or Email Address in the environment ${no_color}" | tee -a "$ERROR_LOG_FILE"
+    ${EXT_DIR}/print_help.sh
+    exit 1
+fi 
+
+if [ -z USER_ID $ ] && [ -z $PASSWORD ]; then 
+    echo -e "${red}In order to send a notification, you need to provide a USER_ID and PASSWORD" | tee -a "$ERROR_LOG_FILE"
+    echo -e "${red}Please set 'USER_ID' as a Text Property and 'PASSWORD' as a Secure Property in the environment properties ${no_color}" | tee -a "$ERROR_LOG_FILE"
+    ${EXT_DIR}/print_help.sh
+    exit 1
+fi 
+
 #############################
-# Install node, and Mocha             #
+# Install node, and Mocha   #
 #############################
 #change directory to /notifications
 cd ${EXT_DIR}
-ls -l
 # install npm:
-echo "Installing npm"
-echo "apt-get install npm"
+log_and_echo "Installing npm"
+log_and_echo "apt-get install npm"
 apt-get install npm &> /dev/null
+if [ $RESULT -ne 0 ]; then
+    log_and_echo "$ERROR" "Could not install npm"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi  
 
 # install node
-echo "Installing nodejs"
-echo "sudo apt-get install nodejs-legacy"
+log_and_echo "Installing nodejs"
+log_and_echo "sudo apt-get install nodejs-legacy"
 sudo apt-get install nodejs-legacy &> /dev/null
+if [ $RESULT -ne 0 ]; then
+    log_and_echo "$ERROR" "Could not install nodejs"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi 
 
 # install mocha:
-echo "Installing mocha"
-echo "npm install -g mocha"
+log_and_echo "Installing mocha"
+log_and_echo "npm install -g mocha"
 npm install -g mocha &> /dev/null
-
+if [ $RESULT -ne 0 ]; then
+    log_and_echo "$ERROR" "Could not install mocha"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi 
 # set mocha in env:
 node node_modules/.bin/mocha &> /dev/null
 
 # install node modules request and btoa
-echo "Installing node modules"
+log_and_echo "Installing node modules"
 npm install btoa &> /dev/null
-npm install request &> /dev/null
-npm install nconf &> /dev/null
+if [ $RESULT -ne 0 ]; then
+    log_and_echo "$ERROR" "Could not install node modules/btoa"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi 
 
-ls -l
+npm install request &> /dev/null
+if [ $RESULT -ne 0 ]; then
+    log_and_echo "$ERROR" "Could not install node modules/request"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi 
+
+npm install nconf &> /dev/null
+if [ $RESULT -ne 0 ]; then
+    log_and_echo "$ERROR" "Could not install node modules/nconf"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi 
+
+log_and_echo "$LABEL" "Initialization complete"
+
 
 # start Notifications.js
 echo -e "Start notifications"

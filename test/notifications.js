@@ -101,12 +101,17 @@ getURL = function() {
 
 
 getAuthentication = function() {
+
+    //look these up from the environment
+    //then these get set on teh stage configuration environmetn proeprties 
+
     var userId = "test2/fihhohnycvic";
     var password = "yrxZxgRBtCqCcCNOQwvHELtMVwwazDyt";
     return btoa(userId + ":" + password);
 }
 
 describe('Send notifications', function(){
+// add before to get authentication information with callback 
 
     this.timeout(100000);
     if ( process.env.EMAIL ) {
