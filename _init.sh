@@ -264,7 +264,6 @@ npm install nconf &> /dev/null
 
 ls -l
 
-
 # start Notifications.js
 echo -e "Start notifications"
 mocha
