@@ -7,11 +7,7 @@
   },
   "dependencies": {
     "mocha": "*",
-    "should": "*",
     "btoa": "*",
-    "nconf":  "*",
-    "validator": "*",
-    "jquery":"*",
     "request" : "*"
   }
 }
