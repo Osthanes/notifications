@@ -236,7 +236,7 @@ fi
 # Install node, and Mocha             #
 #############################
 #change directory to /notifications
-cd notifications
+cd ${EXT_DIR}
 ls -l
 # install npm:
 echo "Installing npm"
