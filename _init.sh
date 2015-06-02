@@ -127,32 +127,6 @@ if [ $RESULT -ne 0 ]; then
     echo -e "${label_color}Successfully installed Cloud Foundry CLI ${no_color}"
 fi 
 
-#############################
-# Install node, and Mocha             #
-#############################
-# install npm:
-echo "Installing npm"
-echo "apt-get install npm"
-apt-get install npm &> /dev/null
-
-# install node
-echo "Installing nodejs"
-echo "sudo apt-get install nodejs-legacy"
-sudo apt-get install nodejs-legacy &> /dev/null
-
-# install mocha:
-echo "Installing mocha"
-echo "npm install -g mocha"
-npm install -g mocha &> /dev/null
-
-# set mocha in env:
-node node_modules/.bin/mocha &> /dev/null
-
-# install node modules request and btoa
-echo "Installing node modules"
-npm install btoa &> /dev/null
-npm install request &> /dev/null
-
 #################################
 # Set Bluemix Host Information  #
 #################################
@@ -257,6 +231,38 @@ else
     echo -e "${green}Successfully logged into IBM Container Service${no_color}"
     ice info 2> /dev/null
 fi 
+
+#############################
+# Install node, and Mocha             #
+#############################
+#change directory to /notifications
+cd notifications
+ls -l
+# install npm:
+echo "Installing npm"
+echo "apt-get install npm"
+apt-get install npm &> /dev/null
+
+# install node
+echo "Installing nodejs"
+echo "sudo apt-get install nodejs-legacy"
+sudo apt-get install nodejs-legacy &> /dev/null
+
+# install mocha:
+echo "Installing mocha"
+echo "npm install -g mocha"
+npm install -g mocha &> /dev/null
+
+# set mocha in env:
+node node_modules/.bin/mocha &> /dev/null
+
+# install node modules request and btoa
+echo "Installing node modules"
+npm install btoa &> /dev/null
+npm install request &> /dev/null
+npm install nconf &> /dev/null
+
+ls -l
 
 # start Notifications.js
 echo -e "Start notifications"
