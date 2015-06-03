@@ -123,7 +123,7 @@ describe('Send notifications', function(){
             console.log("EMAIL is " + process.env.EMAIL);
             notificationParams = getEmailNotificationParms(notificationParams);
             
-            describe('the JSON is created and set to the server', function() {
+            describe('the email notification is created and set to the server', function() {
                 var options = {
                     url: getURL(),
                     body: getBodyForNotifications(notificationParams),
@@ -136,15 +136,15 @@ describe('Send notifications', function(){
                     json:true
                 };
                 callback =  function (error, response, body) {
-                    console.log(response.statusCode);
-                    console.log(body);
+                    console.log("Return code for email notification: " + response.statusCode);
+                    console.log("Email notification response: " + body);
                     assert.equal(error, undefined ,"error " + error + " returned when creating email notification " + getURL());
                     assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
                     done();
                 };
                 request(options,callback);
 
-                it('the notifications return with success', function(done){
+                it('the email notifications return with success', function(done){
 
                     done();
                 });
@@ -160,7 +160,7 @@ describe('Send notifications', function(){
             console.log("PHONE: " + process.env.PHONE);
             notificationParams = getVoiceNotificationParms(notificationParams);
 
-            describe('the JSON is created and set to the server', function() {
+            describe('the phone notification is created and set to the server', function() {
                 var options = {
                     url: getURL(),
                     body: getBodyForNotifications(notificationParams),
@@ -173,15 +173,15 @@ describe('Send notifications', function(){
                     json:true
                 };
                 callback =  function (error, response, body) {
-                    console.log(response.statusCode);
-                    console.log(body);
+                    console.log("Return code for phone notification: " + response.statusCode);
+                    console.log("Phone notification response: " + body);
                     assert.equal(error, undefined ,"error " + error + " returned when creating voice notification " + getURL());
                     assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
                     done();
                 };
                 request(options,callback);
 
-                it('the notifications return with success', function(done){
+                it('the phone notifications return with success', function(done){
                     done();
                 });
            });
@@ -195,7 +195,7 @@ describe('Send notifications', function(){
             console.log("TXT: " + process.env.TXT);
             notificationParams = getTextNotificationParms(notificationParams);
 
-            describe('the JSON is created and set to the server', function() {
+            describe('the text notification is created and set to the server', function() {
                 var options = {
                     url: getURL(),
                     body: getBodyForNotifications(notificationParams),
@@ -208,15 +208,15 @@ describe('Send notifications', function(){
                     json:true
                 };
                 callback =  function (error, response, body) {
-                    console.log(response.statusCode);
-                    console.log(body);
+                    console.log("Return code for text notification: " + response.statusCode);
+                    console.log("text notification response: " + body);
                     assert.equal(error, undefined ,"error " + error + " returned when creating text notification " + getURL());
                     assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
                     done();
                 };
                 request(options,callback);
 
-                it('the notifications return with success', function(done){
+                it('the text notifications return with success', function(done){
 
                     done();
                 });

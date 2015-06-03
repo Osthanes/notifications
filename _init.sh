@@ -263,6 +263,7 @@ setup_met_logging "${BLUEMIX_USER}" "${BLUEMIX_PASSWORD}" "${BLUEMIX_SPACE}" "${
 # check environment properties   #
 ##################################
 
+log_and_echo "Checking environment variables"
 if [ -z "$EMAIL" ] || [ -z "$TXT" ] || [ -z "$PHONE" ]; then 
     echo -e "${red}In order to send a notification, you need to provide a Phone Number, Text Number or Email Address" | tee -a "$ERROR_LOG_FILE"
     echo -e "${red}Please set Phone Number, Text Number or Email Address in the environment ${no_color}" | tee -a "$ERROR_LOG_FILE"
