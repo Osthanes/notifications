@@ -72,7 +72,7 @@ if [[ $DEBUG -eq 1 ]]; then
 fi
 INIT_END_TIME=$(date +\"%s\")
 INIT_EST_TIME=$(($INIT_END_TIME-$INIT_START_TIME))
-echo -e \"Notification runtime of `date -u -d @\"$INIT_EST_TIME\" +\'%-Mm %-Ss\'`\""
+echo -e \"Notification runtime of `date -u -d @\"$INIT_EST_TIME\" +\'%-Mm %-Ss\'`\"
 
 # archive everything 
 if [ \"${ARCHIVE_DIR}\" == \"${WORKSPACE}\" ]; then 
