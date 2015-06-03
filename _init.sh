@@ -258,7 +258,12 @@ popd >/dev/null
 ############################
 source $EXT_DIR/utilities/logging_utils.sh
 setup_met_logging "${BLUEMIX_USER}" "${BLUEMIX_PASSWORD}" "${BLUEMIX_SPACE}" "${BLUEMIX_ORG}" "${BLUEMIX_TARGET}"
-
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    echo -e "${red}Fail to enable logging to logmet ${no_color}"
+    ${EXT_DIR}/print_help.sh    
+    exit 1
+fi  
 ##################################
 # check environment properties   #
 ##################################
@@ -287,6 +292,7 @@ cd ${EXT_DIR}
 log_and_echo "Installing npm"
 log_and_echo "apt-get install npm"
 apt-get install npm &> /dev/null
+RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install npm"
     ${EXT_DIR}/print_help.sh    
@@ -297,6 +303,7 @@ fi
 log_and_echo "Installing nodejs"
 log_and_echo "sudo apt-get install nodejs-legacy"
 sudo apt-get install nodejs-legacy &> /dev/null
+RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install nodejs"
     ${EXT_DIR}/print_help.sh    
@@ -307,6 +314,7 @@ fi
 log_and_echo "Installing mocha"
 log_and_echo "npm install -g mocha"
 npm install -g mocha &> /dev/null
+RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install mocha"
     ${EXT_DIR}/print_help.sh    
@@ -318,6 +326,7 @@ node node_modules/.bin/mocha &> /dev/null
 # install node modules request and btoa
 log_and_echo "Installing node modules"
 npm install btoa &> /dev/null
+RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install node modules/btoa"
     ${EXT_DIR}/print_help.sh    
@@ -325,6 +334,7 @@ if [ $RESULT -ne 0 ]; then
 fi 
 
 npm install request &> /dev/null
+RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install node modules/request"
     ${EXT_DIR}/print_help.sh    
@@ -332,6 +342,7 @@ if [ $RESULT -ne 0 ]; then
 fi 
 
 npm install nconf &> /dev/null
+RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install node modules/nconf"
     ${EXT_DIR}/print_help.sh    
