@@ -137,7 +137,7 @@ describe('Send notifications', function(){
                 };
                 callback =  function (error, response, body) {
                     console.log("Return code for email notification: " + response.statusCode);
-                    console.log("Email notification response: " + body);
+                    console.log(body);
                     assert.equal(error, undefined ,"error " + error + " returned when creating email notification " + getURL());
                     assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
                     done();
@@ -174,7 +174,7 @@ describe('Send notifications', function(){
                 };
                 callback =  function (error, response, body) {
                     console.log("Return code for phone notification: " + response.statusCode);
-                    console.log("Phone notification response: " + body);
+                    console.log(body);
                     assert.equal(error, undefined ,"error " + error + " returned when creating voice notification " + getURL());
                     assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
                     done();
@@ -209,7 +209,7 @@ describe('Send notifications', function(){
                 };
                 callback =  function (error, response, body) {
                     console.log("Return code for text notification: " + response.statusCode);
-                    console.log("text notification response: " + body);
+                    console.log(body);
                     assert.equal(error, undefined ,"error " + error + " returned when creating text notification " + getURL());
                     assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
                     done();
