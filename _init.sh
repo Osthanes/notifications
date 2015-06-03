@@ -264,14 +264,14 @@ setup_met_logging "${BLUEMIX_USER}" "${BLUEMIX_PASSWORD}" "${BLUEMIX_SPACE}" "${
 ##################################
 
 log_and_echo "Checking environment variables"
-if [ -z "$EMAIL" ] || [ -z "$TXT" ] || [ -z "$PHONE" ]; then 
+if [ -z "$EMAIL" ] && [ -z "$TXT" ] && [ -z "$PHONE" ]; then 
     echo -e "${red}In order to send a notification, you need to provide a Phone Number, Text Number or Email Address" | tee -a "$ERROR_LOG_FILE"
     echo -e "${red}Please set Phone Number, Text Number or Email Address in the environment ${no_color}" | tee -a "$ERROR_LOG_FILE"
     ${EXT_DIR}/print_help.sh
     exit 1
 fi 
 
-if [ -z "$USER_ID" ] && [ -z "$PASSWORD" ]; then 
+if [ -z "$USER_ID" ] || [ -z "$PASSWORD" ]; then 
     echo -e "${red}In order to send a notification, you need to provide a USER_ID and PASSWORD" | tee -a "$ERROR_LOG_FILE"
     echo -e "${red}Please set 'USER_ID' as a Text Property and 'PASSWORD' as a Secure Property in the environment properties ${no_color}" | tee -a "$ERROR_LOG_FILE"
     ${EXT_DIR}/print_help.sh
