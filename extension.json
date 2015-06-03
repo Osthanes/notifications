@@ -66,33 +66,27 @@ if [[ $DEBUG -eq 1 ]]; then
     dpkg -l | grep '^ii' > $EXT_DIR/pkglist
 fi 
 . $EXT_DIR/_init.sh
+
 if [[ $DEBUG -eq 1 ]]; then
     dpkg -l | grep '^ii' > $EXT_DIR/pkglist2
     diff $EXT_DIR/pkglist $EXT_DIR/pkglist2
 fi
+
+pushd . 
+cd ${EXT_DIR}
+# start Notifications.js
+echo -e \"Start notifications\"
+mocha --reporter spec 
+RESULT=$?
+popd 
+
 INIT_END_TIME=$(date +\"%s\")
 INIT_EST_TIME=$(($INIT_END_TIME-$INIT_START_TIME))
 echo -e \"Notification runtime of `date -u -d @\"$INIT_EST_TIME\" +\'%-Mm %-Ss\'`\"
 
-# archive everything 
-if [ \"${ARCHIVE_DIR}\" == \"${WORKSPACE}\" ]; then 
-    echo \"Achive directory, is the working directory\"
-else 
-    echo \"Archive directory, is $ARCHIVE_DIR .  Copy all content to that directory\"
-    pushd ${WORKSPACE}
-    #set to archive hidden directories and files with *
-    shopt -s dotglob
-    tar -cf source.tar *
-    mv source.tar ${ARCHIVE_DIR}
-    cd ${ARCHIVE_DIR}
-    tar -xf source.tar 
-    rm source.tar 
-    shopt -u dotglob
-    popd 
-fi 
-if [ $RESULT -ne 0 ]; then 
-    exit $RESULT
-fi"
+echo \"Notification was $RESULT $PHONE, $TXT, $EMAIL: $MESSAGE\" >> $ARCHIVE_DIR/notification.txt
+return $RESULT
+"
     }
     },
     "project": "https://hub.jazz.net/project/alchemy/Alchemy-Ostanes",
