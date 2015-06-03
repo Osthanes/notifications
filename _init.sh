@@ -258,12 +258,7 @@ popd >/dev/null
 ############################
 source $EXT_DIR/utilities/logging_utils.sh
 setup_met_logging "${BLUEMIX_USER}" "${BLUEMIX_PASSWORD}" "${BLUEMIX_SPACE}" "${BLUEMIX_ORG}" "${BLUEMIX_TARGET}"
-RESULT=$?
-if [ $RESULT -ne 0 ]; then
-    echo -e "${red}Fail to enable logging to logmet ${no_color}"
-    ${EXT_DIR}/print_help.sh    
-    exit 1
-fi  
+
 ##################################
 # check environment properties   #
 ##################################
