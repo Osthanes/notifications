@@ -59,8 +59,6 @@ export PHONE=#PHONE#
 export TXT=#TXT#
 export EMAIL=#EMAIL#
 export MESSAGE=#MESSAGE#
-export USER_ID=#USER_ID#
-export PASSWORD=#PASSWORD#
 set +x
 set +e
 # OSSC line
