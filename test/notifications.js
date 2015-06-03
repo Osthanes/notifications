@@ -105,8 +105,11 @@ getAuthentication = function() {
     //look these up from the environment
     //then these get set on teh stage configuration environmetn proeprties 
 
-    var userId = "test2/fihhohnycvic";
-    var password = "yrxZxgRBtCqCcCNOQwvHELtMVwwazDyt";
+    var userId = process.env.USER_ID;
+    var password = process.env.PASSWORD;
+
+//    var userId = "test2/fihhohnycvic";
+//    var password = "yrxZxgRBtCqCcCNOQwvHELtMVwwazDyt";
     return btoa(userId + ":" + password);
 }
 
@@ -114,6 +117,7 @@ describe('Send notifications', function(){
 // add before to get authentication information with callback 
 
     this.timeout(100000);
+
     if ( process.env.EMAIL ) {
         it('One or more email addresses are specified', function(done){
             console.log("EMAIL is " + process.env.EMAIL);
