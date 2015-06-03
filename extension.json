@@ -78,11 +78,10 @@ echo -e \"Notification runtime of `date -u -d @\"$INIT_EST_TIME\" +\'%-Mm %-Ss\'
 if [ \"${ARCHIVE_DIR}\" == \"${WORKSPACE}\" ]; then 
     echo \"Achive directory, is the working directory\"
 else 
-    echo \"Archive directory, is ${ARCHIVE_DIR}.  Copy all content to that directory\"
-    pushd 
+    echo \"Archive directory, is $ARCHIVE_DIR .  Copy all content to that directory\"
+    pushd ${WORKSPACE}
     #set to archive hidden directories and files with *
     shopt -s dotglob
-    cd ${WORKSPACE}
     tar -cf source.tar *
     mv source.tar ${ARCHIVE_DIR}
     cd ${ARCHIVE_DIR}
