@@ -286,7 +286,7 @@ cd ${EXT_DIR}
 # install npm:
 log_and_echo "Installing npm"
 log_and_echo "apt-get install npm"
-apt-get install npm &> /dev/null
+apt-get install -y npm 
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install npm"
@@ -297,7 +297,7 @@ fi
 # install node
 log_and_echo "Installing nodejs"
 log_and_echo "sudo apt-get install nodejs-legacy"
-sudo apt-get install nodejs-legacy &> /dev/null
+apt-get install -y nodejs-legacy
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install nodejs"
