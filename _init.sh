@@ -341,7 +341,3 @@ fi
 log_and_echo "$LABEL" "Initialization complete"
 
 
-# start Notifications.js
-echo -e "Start notifications"
-mocha
-
