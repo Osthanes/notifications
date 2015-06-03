@@ -23,6 +23,7 @@ export red='\e[0;31m'
 export label_color='\e[0;33m'
 export no_color='\e[0m' # No Color
 
+echo
 echo -e "${label_color}We are sorry you are having trouble. ${no_color}"
 
 if [ -n "$ERROR_LOG_FILE" ]; then

@@ -55,10 +55,10 @@
         "type": "JenkinsDocker",
         "shell": "#!/bin/bash
 export INIT_START_TIME=$(date +\"%s\")
-export PHONE=#PHONE#
-export TXT=#TXT#
-export EMAIL=#EMAIL#
-export MESSAGE=#MESSAGE#
+export PHONE=\"#PHONE#\"
+export TXT=\"#TXT#\"
+export EMAIL=\"#EMAIL#\"
+export MESSAGE=\"#MESSAGE#\"
 set +x
 set +e
 # OSSC line
