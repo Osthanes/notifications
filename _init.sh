@@ -271,9 +271,9 @@ if [ -z "$EMAIL" ] && [ -z "$TXT" ] && [ -z "$PHONE" ]; then
     exit 1
 fi 
 
-if [ -z "$USER_ID" ] || [ -z "$PASSWORD" ]; then 
-    echo -e "${red}In order to send a notification, you need to provide a USER_ID and PASSWORD" | tee -a "$ERROR_LOG_FILE"
-    echo -e "${red}Please set 'USER_ID' as a Text Property and 'PASSWORD' as a Secure Property in the environment properties ${no_color}" | tee -a "$ERROR_LOG_FILE"
+if [ -z "$NOTIFY_ID" ] || [ -z "$NOTIFY_PASSWORD" ]; then 
+    echo -e "${red}In order to send a notification, you need to provide a NOTIFY_ID and NOTIFY_PASSWORD" | tee -a "$ERROR_LOG_FILE"
+    echo -e "${red}Please set 'NOTIFY_ID' as a Text Property and 'NOTIFY_PASSWORD' as a Secure Property in the environment properties ${no_color}" | tee -a "$ERROR_LOG_FILE"
     ${EXT_DIR}/print_help.sh
     exit 1
 fi 

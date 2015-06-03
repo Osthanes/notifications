@@ -105,12 +105,10 @@ getAuthentication = function() {
     //look these up from the environment
     //then these get set on teh stage configuration environmetn proeprties 
 
-    var userId = process.env.USER_ID;
-    var password = process.env.PASSWORD;
+    var notify_Id = process.env.NOTIFY_ID;
+    var notidy_password = process.env.NOTIFY_PASSWORD;
 
-//    var userId = "test2/fihhohnycvic";
-//    var password = "yrxZxgRBtCqCcCNOQwvHELtMVwwazDyt";
-    return btoa(userId + ":" + password);
+    return btoa(notify_Id + ":" + notidy_password);
 }
 
 describe('Send notifications', function(){
