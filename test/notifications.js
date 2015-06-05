@@ -32,15 +32,27 @@ var channel = "";
  *            callback
  * @returns HOT {*}
  */
-var getRecipients = function(notificationParams) {
+/*var getRecipients = function(notificationParams) {
 	theRecipients = "";
 	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
 		theRecipients = theRecipients + notificationParams.recipient_info[i];
 		if ( i < notificationParams.recipient_info.length - 1 ) {
-			theRecipients = theRecipients + ",";
+			theRecipients = theRecipients + ", ";
 		}
 	}
 	return theRecipients;
+};
+*/
+var getRecipients = function(notificationParams) {
+	theRecipients = "[";
+	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
+		theRecipients = theRecipients + "\"" + notificationParams.recipient_info[i] + "\"";
+		if ( i < notificationParams.recipient_info.length - 1 ) {
+			theRecipients = theRecipients + ", ";
+		}
+	}
+    theRecipients = theRecipients + "]";
+	return JSON.parse(theRecipients);
 };
 
 /**
@@ -56,7 +68,7 @@ var getRecipients = function(notificationParams) {
  var getBodyForNotifications = function(notificationParams) {
     return {
         "channel": notificationParams.channel_type,
-        "recipients": [ getRecipients(notificationParams) ],
+        "recipients": getRecipients(notificationParams),
         "payload": notificationParams.payload_info,
         "options": {
             "subject": notificationParams.subject_info,
@@ -229,6 +241,7 @@ describe('Send notifications', function(){
             notificationParams = getTextNotificationParms(notificationParams);
 
             describe('the text notification is created and set to the server', function() {
+                console.log("getBodyForNotifications(notificationParams): " + JSON.stringify(getBodyForNotifications(notificationParams)));
                 var options = {
                     url: getURL(),
                     body: getBodyForNotifications(notificationParams),
