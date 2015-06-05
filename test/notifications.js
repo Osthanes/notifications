@@ -32,17 +32,6 @@ var channel = "";
  *            callback
  * @returns HOT {*}
  */
-/*var getRecipients = function(notificationParams) {
-	theRecipients = "";
-	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
-		theRecipients = theRecipients + notificationParams.recipient_info[i];
-		if ( i < notificationParams.recipient_info.length - 1 ) {
-			theRecipients = theRecipients + ", ";
-		}
-	}
-	return theRecipients;
-};
-*/
 var getRecipients = function(notificationParams) {
 	theRecipients = "[";
 	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
