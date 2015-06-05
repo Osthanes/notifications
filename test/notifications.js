@@ -230,7 +230,6 @@ describe('Send notifications', function(){
             notificationParams = getTextNotificationParms(notificationParams);
 
             describe('the text notification is created and set to the server', function() {
-                console.log("getBodyForNotifications(notificationParams): " + JSON.stringify(getBodyForNotifications(notificationParams)));
                 var options = {
                     url: getURL(),
                     body: getBodyForNotifications(notificationParams),
@@ -265,13 +264,13 @@ describe('Send notifications', function(){
         notificationParams = getSlackNotificationParms(notificationParams);
         for (var i = 0; i < notificationParams.recipient_info.length; i++) {
             channel = notificationParams.recipient_info[i];
-            _Fn(notificationParams, channel)
+            sendSlackUsingWebhook(notificationParams, channel)
         };
     } else {
         it('No slack channel specified', function(done) {done();});
     };
 
-    function _Fn(theNotificationParams, theChannel){
+    function sendSlackUsingWebhook(theNotificationParams, theChannel){
 
         it('One or more slack channel are specified', function(done){
             console.log("SLACK_CHANNEL: " + process.env.SLACK_CHANNEL);
@@ -289,8 +288,8 @@ describe('Send notifications', function(){
                 callback =  function (error, response, body) {
                     console.log("Return code for slack notification: " + response.statusCode);
                     console.log(body);
-                    assert.equal(error, undefined ,"error " + error + " returned when creating slack notification " + getURL());
-                    assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
+                    assert.equal(error, undefined ,"error " + error + " returned when creating slack notification " + getSlackWebhookURL());
+                    assert.equal(response.statusCode, 200, "expected 200 return code from " + getSlackWebhookURL() + " but got " + response.statusCode + ", " + body);
                     done();
                 };
                 request(options,callback);

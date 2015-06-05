@@ -287,8 +287,7 @@ if [ -n "$EMAIL" ] || [ -n "$TXT" ] || [ -n "$PHONE" ]; then
     fi 
 fi
 
-if [ -n "$SLACK_CHANNEL" ]; then
-    if [ -z "$SLACK_WEBHOOK_PATH" ] ]; then 
+if [ -n "$SLACK_CHANNEL" ] && [ -z "$SLACK_WEBHOOK_PATH" ]; then 
         echo -e "${red}In order to send a stack notification, you need to provide a SLACK_WEBHOOK_PATH" | tee -a "$ERROR_LOG_FILE"
         echo -e "${red}Please set 'SLACK_WEBHOOK_PATH' as a Secure Property in the environment properties ${no_color}" | tee -a "$ERROR_LOG_FILE"
         ${EXT_DIR}/print_help.sh
