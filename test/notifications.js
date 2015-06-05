@@ -19,6 +19,8 @@ var request = require('request');
 var btoa = require('btoa');
 
 var notificationParams = {};
+var channel = "";
+
 
 /**
  * notifications.getRecipients
@@ -39,27 +41,6 @@ var getRecipients = function(notificationParams) {
 		}
 	}
 	return theRecipients;
-};
-
-/**
- * notifications.getSlackChannels
- *
- * @description Get the slack channels.
- * @param {object|String}
- *            notificationParams The input parameters
- * @param {function}
- *            callback
- * @returns HOT {*}
- */
-var getSlackChannels = function(notificationParams) {
-	theSlackChannels = "";
-	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
-		theSlackChannels = theSlackChannels + "\"" + notificationParams.recipient_info[i] + "\"";
-        if ( i < notificationParams.recipient_info.length - 1 ) {
-            theRecipients = theRecipients + ", \"channel\": ";
-        }
-	}
-	return theSlackChannels;
 };
 
 /**
@@ -94,12 +75,13 @@ var getSlackChannels = function(notificationParams) {
  *            callback
  * @returns HOT {*}
  */
-var getSlackBodyForNotifications = function(notificationParams) {
+var getSlackBodyForNotifications = function(notificationParams, theChannel) {
     return {
-        "channel": JSON.parse(getSlackChannels(notificationParams)), 
+        "channel": theChannel, 
         "username": "Pipeline", 
         "text": notificationParams.payload_info, 
-        "icon_emoji": ":traffic_light:"
+        "icon_url": "https://hub.jazz.net/api/v1/composition/graphics/header/bluemix-logo.png"
+//        "icon_emoji": ":traffic_light:"
     };
 };
 
@@ -278,14 +260,23 @@ describe('Send notifications', function(){
     }
 
     if ( process.env.SLACK_CHANNEL ) {
+        notificationParams = getSlackNotificationParms(notificationParams);
+        for (var i = 0; i < notificationParams.recipient_info.length; i++) {
+            channel = notificationParams.recipient_info[i];
+            _Fn(notificationParams, channel)
+        };
+    } else {
+        it('No slack channel specified', function(done) {done();});
+    };
+
+    function _Fn(theNotificationParams, theChannel){
+
         it('One or more slack channel are specified', function(done){
             console.log("SLACK_CHANNEL: " + process.env.SLACK_CHANNEL);
-            notificationParams = getSlackNotificationParms(notificationParams);
-
             describe('the slack notification is created and set to the server', function() {
                 var options = {
                     url: getSlackWebhookURL(),
-                    body: getSlackBodyForNotifications(notificationParams),
+                    body: getSlackBodyForNotifications(theNotificationParams, theChannel),
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -308,9 +299,9 @@ describe('Send notifications', function(){
                 });
            });
         });
-    } else {
-        it('No slack channel specified', function(done) {done();});
-    }
+    };
 });
+
+
 
 
