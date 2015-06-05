@@ -37,6 +37,14 @@
             "desc_key": "EMAIL_DESC"
         },          
         {
+            "name": "SLACK_CHANNEL",
+            "type": "Text",
+            "required": "false",
+            "default_value": "",
+            "label_key": "SLACK_CHANNEL_KEY",
+            "desc_key": "SLACK_CHANNEL_DESC"
+        },          
+        {
             "name": "MESSAGE",
             "type": "Text",
             "required": "false",
@@ -58,6 +66,7 @@ export INIT_START_TIME=$(date +\"%s\")
 export PHONE=\"#PHONE#\"
 export TXT=\"#TXT#\"
 export EMAIL=\"#EMAIL#\"
+export SLACK_CHANNEL=\"#SLACK_CHANNEL#\"
 export MESSAGE=\"#MESSAGE#\"
 set +x
 set +e

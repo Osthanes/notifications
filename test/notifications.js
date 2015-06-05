@@ -42,6 +42,27 @@ var getRecipients = function(notificationParams) {
 };
 
 /**
+ * notifications.getSlackChannels
+ *
+ * @description Get the slack channels.
+ * @param {object|String}
+ *            notificationParams The input parameters
+ * @param {function}
+ *            callback
+ * @returns HOT {*}
+ */
+var getSlackChannels = function(notificationParams) {
+	theSlackChannels = "";
+	for (var i = 0; i < notificationParams.recipient_info.length; i++) {
+		theSlackChannels = theSlackChannels + "\"" + notificationParams.recipient_info[i] + "\"";
+        if ( i < notificationParams.recipient_info.length - 1 ) {
+            theRecipients = theRecipients + ", \"channel\": ";
+        }
+	}
+	return theSlackChannels;
+};
+
+/**
  * notifications.getBodyForNotifications
  *
  * @description Get body of the Notification.
@@ -63,6 +84,24 @@ var getRecipients = function(notificationParams) {
     };
 };
 
+/**
+ * notifications.getSlackBodyForNotifications
+ *
+ * @description Get body of the slack Notification.
+ * @param {object|String}
+ *            notificationParams The input parameters
+ * @param {function}
+ *            callback
+ * @returns HOT {*}
+ */
+var getSlackBodyForNotifications = function(notificationParams) {
+    return {
+        "channel": JSON.parse(getSlackChannels(notificationParams)), 
+        "username": "Pipeline", 
+        "text": notificationParams.payload_info, 
+        "icon_emoji": ":traffic_light:"
+    };
+};
 
 getEmailNotificationParms = function(notificationParams) {
     notificationParams.channel_type = "email";
@@ -95,10 +134,24 @@ getTextNotificationParms = function(notificationParams) {
     return notificationParams;
 }
 
+getSlackNotificationParms = function(notificationParams) {
+    notificationParams.channel_type = "slack";
+    notificationParams.recipient_info = process.env.SLACK_CHANNEL.split(",");
+    notificationParams.payload_info = process.env.MESSAGE;
+    return notificationParams;
+}
+
 getURL = function() {
     return "https://notify-test.services.ibmserviceengage.com/api/send/v1";
 }
 
+getSlackWebhookURL = function() {
+    return "https://hooks.slack.com/services/" + process.env.SLACK_WEBHOOK_PATH;
+}
+
+getSlackApiURL = function() {
+    return "https://slack.com/api/chat.postMessage" + process.env.SLACK_TOKEN;
+}
 
 getAuthentication = function() {
 
@@ -224,6 +277,40 @@ describe('Send notifications', function(){
         it('No text numbers specified', function(done) {done();});
     }
 
+    if ( process.env.SLACK_CHANNEL ) {
+        it('One or more slack channel are specified', function(done){
+            console.log("SLACK_CHANNEL: " + process.env.SLACK_CHANNEL);
+            notificationParams = getSlackNotificationParms(notificationParams);
+
+            describe('the slack notification is created and set to the server', function() {
+                var options = {
+                    url: getSlackWebhookURL(),
+                    body: getSlackBodyForNotifications(notificationParams),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    rejectUnauthorized: false,
+                    method: 'POST',
+                    json:true
+                };
+                callback =  function (error, response, body) {
+                    console.log("Return code for slack notification: " + response.statusCode);
+                    console.log(body);
+                    assert.equal(error, undefined ,"error " + error + " returned when creating slack notification " + getURL());
+                    assert.equal(response.statusCode, 200, "expected 200 return code from " + getURL() + " but got " + response.statusCode + ", " + body);
+                    done();
+                };
+                request(options,callback);
+
+                it('the slack notifications return with success', function(done){
+
+                    done();
+                });
+           });
+        });
+    } else {
+        it('No slack channel specified', function(done) {done();});
+    }
 });
 
 
