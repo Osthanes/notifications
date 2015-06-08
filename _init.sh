@@ -241,6 +241,8 @@ fi
 #############################
 #change directory to /notifications
 cd ${EXT_DIR}
+log_and_echo "sudo apt-get update -y"
+sudo apt-get update -y
 # install npm:
 log_and_echo "Installing npm"
 log_and_echo "sudo apt-get install npm"
