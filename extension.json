@@ -60,8 +60,18 @@
             "label_key": "ONLY_SUCCESS_KEY",
             "desc_key": "ONLY_SUCCESS_DESC",
             "options": [
-                { "value": "SUCCESS" },
-                { "value": "FAILURE" }
+                {
+                    "label-key": "",
+                    "value": ""
+                },
+                { 
+                    "label_key": "SUCCESS",
+                    "value": "SUCCESS" 
+                },
+                { 
+                    "label_key": "FAILURE",
+                    "value": "FAILURE"
+                }
             ]
         },
         {
