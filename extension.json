@@ -60,10 +60,6 @@
             "label_key": "ONLY_SUCCESS_KEY",
             "desc_key": "ONLY_SUCCESS_DESC",
             "options": [
-                {
-                    "label-key": "''",
-                    "value": ""
-                },
                 { 
                     "label_key": "SUCCESS_KEY",
                     "value": "SUCCESS" 
