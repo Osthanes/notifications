@@ -53,6 +53,18 @@
             "desc_key": "MESSAGE_DESC"
         },
         {
+            "name": "ONLY_NOTIFY",
+            "type": "Select",
+            "required": "false",
+            "default_value": "",
+            "label_key": "ONLY_SUCCESS_KEY",
+            "desc_key": "ONLY_SUCCESS_DESC",
+            "options": [
+                { "value": "SUCCESS" },
+                { "value": "FAILURE" }
+            ]
+        },
+        {
             "name": "ONLY_SUCCESS",
             "type": "Checkbox",
             "required": "false",
