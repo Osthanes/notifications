@@ -3,7 +3,7 @@
     "version": 1,
     "name_key": "ExtName",
     "desc_key": "ExtDesc",
-    "extension_type": "Build",
+    "extension_type": "Test",
     "message_key": "ExtMessage",
     "inputs": [
         {
@@ -51,7 +51,29 @@
             "default_value": "",
             "label_key": "MESSAGE_KEY",
             "desc_key": "MESSAGE_DESC"
-        }      
+        },
+        {
+            "name": "ONLY_NOTIFY",
+            "type": "Select",
+            "required": "false",
+            "default_value": "ANY",
+            "label_key": "ONLY_NOTIFY_KEY",
+            "desc_key": "ONLY_NOTIFY_DESC",
+            "options": [
+                {
+                    "label_key": "ANY_KEY",
+                    "value": "ANY"
+                },
+                { 
+                    "label_key": "SUCCESS_KEY",
+                    "value": "SUCCESS" 
+                },
+                { 
+                    "label_key": "FAILURE_KEY",
+                    "value": "FAILURE"
+                }
+            ]
+        }
     ],
     "outputs": [
         {
