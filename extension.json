@@ -61,15 +61,15 @@
             "desc_key": "ONLY_SUCCESS_DESC",
             "options": [
                 {
-                    "label-key": "\"\"",
+                    "label-key": "''",
                     "value": ""
                 },
                 { 
-                    "label_key": "'SUCCESS'",
+                    "label_key": "SUCCESS_KEY",
                     "value": "SUCCESS" 
                 },
                 { 
-                    "label_key": "\"FAILURE\"",
+                    "label_key": "FAILURE_KEY",
                     "value": "FAILURE"
                 }
             ]
