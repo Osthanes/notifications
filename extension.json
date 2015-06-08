@@ -65,7 +65,7 @@
                     "value": ""
                 },
                 { 
-                    "label_key": "\"SUCCESS\"",
+                    "label_key": "'SUCCESS'",
                     "value": "SUCCESS" 
                 },
                 { 
