@@ -56,7 +56,7 @@
             "name": "ONLY_NOTIFY",
             "type": "Select",
             "required": "false",
-            "default_value": "",
+            "default_value": "ANY",
             "label_key": "ONLY_NOTIFY_KEY",
             "desc_key": "ONLY_NOTIFY_DESC",
             "options": [
