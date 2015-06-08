@@ -167,20 +167,6 @@ if [ -n "$BLUEMIX_USER" ] || [ ! -f ~/.cf/config.json ]; then
     echo ""
 fi 
 
-# check login result 
-if [ $RESULT -eq 1 ]; then
-    echo -e "${red}Failed to login to IBM Container Service${no_color}"
-    ice namespace get 2> /dev/null
-    HAS_NAMESPACE=$?
-    if [ $HAS_NAMESPACE -eq 1 ]; then 
-        printEnablementInfo        
-    fi
-    ${EXT_DIR}/print_help.sh
-    exit $RESULT
-else 
-    echo -e "${green}Successfully logged into IBM Container Service${no_color}"
-    ice info 2> /dev/null
-fi 
 
 ########################
 # Setup git_retry      #
