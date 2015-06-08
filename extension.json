@@ -61,7 +61,7 @@
             "desc_key": "ONLY_NOTIFY_DESC",
             "options": [
                 {
-                    "label-key": "BLANK_KEY",
+                    "label_key": "BLANK_KEY",
                     "value": "ANY"
                 },
                 { 
