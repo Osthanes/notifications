@@ -242,11 +242,11 @@ fi
 #change directory to /notifications
 cd ${EXT_DIR}
 log_and_echo "sudo apt-get update -y"
-sudo apt-get update -y
+sudo apt-get update -y &> /dev/null
 # install npm:
 log_and_echo "Installing npm"
 log_and_echo "sudo apt-get install npm"
-sudo apt-get install -y npm 
+sudo apt-get install -y npm &> /dev/null
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install npm"
@@ -257,7 +257,7 @@ fi
 # install node
 log_and_echo "Installing nodejs"
 log_and_echo "sudo apt-get install nodejs-legacy"
-sudo apt-get install -y nodejs-legacy 
+sudo apt-get install -y nodejs-legacy &> /dev/null
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install nodejs"
@@ -268,7 +268,7 @@ fi
 # install mocha:
 log_and_echo "Installing mocha"
 log_and_echo "npm install -g mocha"
-npm install -g mocha 
+npm install -g mocha &> /dev/null
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
     log_and_echo "$ERROR" "Could not install mocha"
