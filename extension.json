@@ -62,7 +62,7 @@
             "options": [
                 {
                     "label-key": "BLANK_KEY",
-                    "value": ""
+                    "value": "ANY"
                 },
                 { 
                     "label_key": "SUCCESS_KEY",
