@@ -30,29 +30,6 @@ debugme() {
   [[ $DEBUG = 1 ]] && "$@" || :
 }
 export -f debugme 
-installwithpython27() {
-    echo "Installing Python 2.7"
-    sudo apt-get update &> /dev/null
-    sudo apt-get -y install python2.7 &> /dev/null
-    python --version 
-    wget --no-check-certificate https://bootstrap.pypa.io/get-pip.py &> /dev/null
-    python get-pip.py --user &> /dev/null
-    export PATH=$PATH:~/.local/bin
-    if [ -f icecli-2.0.zip ]; then 
-        debugme echo "there was an existing icecli.zip"
-        debugme ls -la 
-        rm -f icecli-2.0.zip
-    fi 
-    wget https://static-ice.ng.bluemix.net/icecli-2.0.zip &> /dev/null
-    pip install --user icecli-2.0.zip > cli_install.log 2>&1 
-    debugme cat cli_install.log 
-}
-
-if [[ $DEBUG = 1 ]]; then 
-    export ICE_ARGS="--verbose"
-else
-    export ICE_ARGS=""
-fi 
 
 set +e
 set +x 
@@ -94,46 +71,42 @@ else
 fi 
 export LOG_DIR=$ARCHIVE_DIR
 
-######################
-# Install ICE CLI    #
-######################
-echo "Installing IBM Container Service CLI"
-ice help &> /dev/null
-RESULT=$?
-if [ $RESULT -ne 0 ]; then
-    installwithpython27
-    ice help &> /dev/null
-    RESULT=$?
-    if [ $RESULT -ne 0 ]; then
-        echo -e "${red}Failed to install IBM Container Service CLI ${no_color}"
-        debugme python --version
-        ${EXT_DIR}/print_help.sh
-        exit $RESULT
-    fi
-    echo -e "${label_color}Successfully installed IBM Container Service CLI ${no_color}"
-fi 
-
 #############################
 # Install Cloud Foundry CLI #
 #############################
+pushd . 
+echo "Installing Cloud Foundry CLI"
+cd $EXT_DIR 
+mkdir bin
+cd bin
+curl --silent -o cf-linux-amd64.tgz -v -L https://cli.run.pivotal.io/stable?release=linux64-binary &>/dev/null 
+gunzip cf-linux-amd64.tgz &> /dev/null
+tar -xvf cf-linux-amd64.tar  &> /dev/null
+
 cf help &> /dev/null
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
-    echo "Installing Cloud Foundry CLI"
-    pushd . 
-    cd $EXT_DIR 
-    gunzip cf-linux-amd64.tgz &> /dev/null
-    tar -xvf cf-linux-amd64.tar  &> /dev/null
-    cf help &> /dev/null
-    RESULT=$?
-    if [ $RESULT -ne 0 ]; then
-        echo -e "${red}Could not install the cloud foundry CLI ${no_color}"
-        ${EXT_DIR}/print_help.sh    
-        exit 1
-    fi  
-    popd
-    echo -e "${label_color}Successfully installed Cloud Foundry CLI ${no_color}"
+    echo "Cloud Foundry CLI not already installed, adding CF to PATH"
+    export PATH=$PATH:$EXT_DIR/bin
+else 
+    echo 'Cloud Foundry CLI already available in container.  Latest CLI version available in ${EXT_DIR}/bin'  
 fi 
+
+# check that we are logged into cloud foundry correctly
+cf spaces 
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+    echo -e "${red}Failed to check cf spaces to confirm login${no_color}"
+    exit $RESULT
+else 
+    echo -e "${green}Successfully logged into IBM Bluemix${no_color}"
+fi 
+popd 
+
+export container_cf_version=$(cf --version)
+export latest_cf_version=$(${EXT_DIR}/bin/cf --version)
+echo "Container Cloud Foundry CLI Version: ${container_cf_version}"
+echo "Latest Cloud Foundry CLI Version: ${latest_cf_version}"
 
 #################################
 # Set Bluemix Host Information  #
@@ -159,19 +132,13 @@ else
     export CCS_REGISTRY_HOST="registry-ice.ng.bluemix.net"
     export BLUEMIX_API_HOST="api.ng.bluemix.net"
     export ICE_CFG="ice-cfg-prod.ini"
-
+    export BLUEMIX_TARGET="prod"
 fi  
 
 ################################
 # Login to Container Service   #
 ################################
-if [ -n "$API_KEY" ]; then 
-    echo -e "${label_color}Logging on with API_KEY${no_color}"
-    debugme echo "Login command: ice $ICE_ARGS login --key ${API_KEY}"
-    #ice $ICE_ARGS login --key ${API_KEY} --host ${CCS_API_HOST} --registry ${CCS_REGISTRY_HOST} --api ${BLUEMIX_API_HOST} 
-    ice $ICE_ARGS login --key ${API_KEY} 2> /dev/null
-    RESULT=$?
-elif [ -n "$BLUEMIX_USER" ] || [ ! -f ~/.cf/config.json ]; then
+if [ -n "$BLUEMIX_USER" ] || [ ! -f ~/.cf/config.json ]; then
     # need to gather information from the environment 
     # Get the Bluemix user and password information 
     if [ -z "$BLUEMIX_USER" ]; then 
@@ -198,31 +165,6 @@ elif [ -n "$BLUEMIX_USER" ] || [ ! -f ~/.cf/config.json ]; then
     echo "BLUEMIX_ORG: ${BLUEMIX_ORG}"
     echo "BLUEMIX_PASSWORD: xxxxx"
     echo ""
-    echo -e "${label_color}Logging in to Bluemix and IBM Container Service using environment properties${no_color}"
-    debugme echo "login command: ice $ICE_ARGS login --cf --host ${CCS_API_HOST} --registry ${CCS_REGISTRY_HOST} --api ${BLUEMIX_API_HOST} --user ${BLUEMIX_USER} --psswd ${BLUEMIX_PASSWORD} --org ${BLUEMIX_ORG} --space ${BLUEMIX_SPACE}"
-    ice $ICE_ARGS login --cf --host ${CCS_API_HOST} --registry ${CCS_REGISTRY_HOST} --api ${BLUEMIX_API_HOST} --user ${BLUEMIX_USER} --psswd ${BLUEMIX_PASSWORD} --org ${BLUEMIX_ORG} --space ${BLUEMIX_SPACE} 2> /dev/null
-    RESULT=$?
-else 
-    # we are already logged in.  Simply check via ice command 
-    echo -e "${label_color}Logging into IBM Container Service using credentials passed from IBM DevOps Services ${no_color}"
-    mkdir -p ~/.ice
-    debugme cat "${EXT_DIR}/${ICE_CFG}"
-    cp ${EXT_DIR}/${ICE_CFG} ~/.ice/ice-cfg.ini
-    debugme cat ~/.ice/ice-cfg.ini
-    debugme echo "config.json:"
-    debugme cat /home/jenkins/.cf/config.json | cut -c1-2
-    debugme cat /home/jenkins/.cf/config.json | cut -c3-
-    debugme echo "testing ice login via ice info command"
-    ice --verbose info > info.log 2> /dev/null
-    RESULT=$?
-    debugme cat info.log 
-    if [ $RESULT -eq 0 ]; then
-        echo "ice info was successful.  Checking login to registry server" 
-        ice images &> /dev/null
-        RESULT=$? 
-    else 
-        echo "ice info did not return successfully.  Login failed."
-    fi 
 fi 
 
 # check login result 
