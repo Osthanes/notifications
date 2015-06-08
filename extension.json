@@ -51,7 +51,23 @@
             "default_value": "",
             "label_key": "MESSAGE_KEY",
             "desc_key": "MESSAGE_DESC"
-        }      
+        },
+        {
+            "name": "ONLY_SUCCESS",
+            "type": "Checkbox",
+            "required": "false",
+            "default_value": "false",
+            "label_key": "ONLY_SUCCESS_KEY",
+            "desc_key": "ONLY_SUCCESS_DESC"
+        },
+        {
+            "name": "ONLY_FAILURE",
+            "type": "Checkbox",
+            "required": "false",
+            "default_value": "false",
+            "label_key": "ONLY_FAILURE_KEY",
+            "desc_key": "ONLY_FAILURE_DESC"
+        }
     ],
     "outputs": [
         {
