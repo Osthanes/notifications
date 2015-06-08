@@ -1,5 +1,5 @@
 {
-    "id": "ibm.devops.services.pipeline.test.notification.simple",
+    "id": "ibm.devops.services.pipeline.notification.simple",
     "version": 1,
     "name_key": "ExtName",
     "desc_key": "ExtDesc",
