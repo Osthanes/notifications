@@ -192,9 +192,9 @@ setup_met_logging "${BLUEMIX_USER}" "${BLUEMIX_PASSWORD}" "${BLUEMIX_SPACE}" "${
 ##################################
 
 log_and_echo "Checking environment variables"
-if [ -z "$EMAIL" ] && [ -z "$TXT" ] && [ -z "$PHONE" ] && [ -z "$SLACK_CHANNEL" ]; then 
-    echo -e "${red}In order to send a notification, you need to provide a Phone Number, Text Number, Email Address or Slack Channel" | tee -a "$ERROR_LOG_FILE"
-    echo -e "${red}Please set Phone Number, Text Number, Email Address or Slack Channel in the environment ${no_color}" | tee -a "$ERROR_LOG_FILE"
+if [ -z "$SLACK_CHANNEL" ]; then 
+    echo -e "${red}In order to send a notification, you need to provide a Slack Channel" | tee -a "$ERROR_LOG_FILE"
+    echo -e "${red}Please set Slack Channel in the environment ${no_color}" | tee -a "$ERROR_LOG_FILE"
     ${EXT_DIR}/print_help.sh
     exit 1
 fi 
@@ -205,15 +205,6 @@ if [ -z "$MESSAGE" ]; then
     ${EXT_DIR}/print_help.sh
     exit 1
 fi 
-
-if [ -n "$EMAIL" ] || [ -n "$TXT" ] || [ -n "$PHONE" ]; then
-    if [ -z "$NOTIFY_ID" ] || [ -z "$NOTIFY_PASSWORD" ]; then 
-        echo -e "${red}In order to send a email, phone, or text notification, you need to provide a NOTIFY_ID and NOTIFY_PASSWORD" | tee -a "$ERROR_LOG_FILE"
-        echo -e "${red}Please set 'NOTIFY_ID' as a Text Property and 'NOTIFY_PASSWORD' as a Secure Property in the environment properties ${no_color}" | tee -a "$ERROR_LOG_FILE"
-        ${EXT_DIR}/print_help.sh
-        exit 1
-    fi 
-fi
 
 if [ -n "$SLACK_CHANNEL" ] && [ -z "$SLACK_WEBHOOK_PATH" ]; then 
     echo -e "${red}In order to send a stack notification, you need to provide a SLACK_WEBHOOK_PATH" | tee -a "$ERROR_LOG_FILE"

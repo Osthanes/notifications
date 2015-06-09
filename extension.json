@@ -15,7 +15,7 @@
         {
             "name": "SLACK_CHANNEL",
             "type": "Text",
-            "required": "false",
+            "required": "true",
             "default_value": "",
             "label_key": "SLACK_CHANNEL_KEY",
             "desc_key": "SLACK_CHANNEL_DESC"
@@ -23,7 +23,7 @@
         {
             "name": "MESSAGE",
             "type": "Text",
-            "required": "false",
+            "required": "true",
             "default_value": "",
             "label_key": "MESSAGE_KEY",
             "desc_key": "MESSAGE_DESC"
