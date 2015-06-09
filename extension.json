@@ -73,19 +73,16 @@ if [[ $DEBUG -eq 1 ]]; then
     diff $EXT_DIR/pkglist $EXT_DIR/pkglist2
 fi
 echo -e \"ONLY_NOTIFY=$ONLY_NOTIFY\"
-env
 echo -e \"NOTIFY_JOB_STATUS=$NOTIFY_JOB_STATUS\"
 if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
     if [ \"$NOTIFY_JOB_STATUS\" -eq 0 ]; then
         #success
-        echo -e \"At previous job succss\"
         if [ \"$ONLY_NOTIFY\" == \"FAILURE\" ]; then
             echo -e \"Notification not running.  Previous job returned success and notification is set to only notify on failure.\"
             exit $NOTIFY_JOB_STATUS
         fi
     else
         #failure
-        echo -e \"At previous job failure\"
         if [ \"$ONLY_NOTIFY\" == \"SUCCESS\" ]; then
             echo -e \"Notification not running.  Previous job returned failure and notification is set to only notify on success.\"
             exit $NOTIFY_JOB_STATUS
@@ -93,7 +90,6 @@ if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
     fi
 else
     #no value set for previous job return code
-    echo -e \"At no previous job value\"
     if [ \"$ONLY_NOTIFY\" == \"FAILURE\" ]; then
         echo -e \"Notification not running.  No value was set for NOTIFY_JOB_STATUS and notify is set to only notify on failure\"
         exit $NOTIFY_JOB_STATUS
