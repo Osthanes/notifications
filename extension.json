@@ -67,10 +67,6 @@ export ONLY_NOTIFY=\"#ONLY_NOTIFY#\"
 set +x
 set +e
 # OSSC line
-if [[ $DEBUG -eq 1 ]]; then
-    dpkg -l | grep '^ii' > $EXT_DIR/pkglist
-fi 
-. $EXT_DIR/_init.sh
 
 if [[ $DEBUG -eq 1 ]]; then
     dpkg -l | grep '^ii' > $EXT_DIR/pkglist2
@@ -101,6 +97,12 @@ else
         exit $NOTIFY_JOB_STATUS
     fi    
 fi
+
+if [[ $DEBUG -eq 1 ]]; then
+    dpkg -l | grep '^ii' > $EXT_DIR/pkglist
+fi 
+. $EXT_DIR/_init.sh
+
 pushd . 
 cd ${EXT_DIR}
 # start Notifications.js
