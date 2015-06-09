@@ -72,8 +72,6 @@ if [[ $DEBUG -eq 1 ]]; then
     dpkg -l | grep '^ii' > $EXT_DIR/pkglist2
     diff $EXT_DIR/pkglist $EXT_DIR/pkglist2
 fi
-echo -e \"ONLY_NOTIFY=$ONLY_NOTIFY\"
-echo -e \"NOTIFY_JOB_STATUS=$NOTIFY_JOB_STATUS\"
 if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
     if [ \"$NOTIFY_JOB_STATUS\" -eq 0 ]; then
         #success
