@@ -30,7 +30,7 @@
         },
         {
             "name": "ONLY_NOTIFY",
-            "type": "Select",
+            "type": "Text",
             "required": "false",
             "default_value": "ANY",
             "label_key": "ONLY_NOTIFY_KEY",
