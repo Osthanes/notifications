@@ -1,5 +1,5 @@
 {
-    "id": "ibm.devops.services.pipeline.notification.simple",
+    "id": "ibm.devops.services.pipeline.notification.slack",
     "version": 1,
     "name_key": "ExtName",
     "desc_key": "ExtDesc",
@@ -12,30 +12,6 @@
         }
     ],
     "params": [
-        {
-            "name": "PHONE",
-            "type": "Text",
-            "required": "false",
-            "default_value": "",
-            "label_key": "PHONE_KEY",
-            "desc_key": "PHONE_DESC"
-        },
-        {
-            "name": "TXT",
-            "type": "Text",
-            "required": "false",
-            "default_value": "",
-            "label_key": "TXT_KEY",
-            "desc_key": "TXT_DESC"
-        },
-        {
-            "name": "EMAIL",
-            "type": "Text",
-            "required": "false",
-            "default_value": "",
-            "label_key": "EMAIL_KEY",
-            "desc_key": "EMAIL_DESC"
-        },          
         {
             "name": "SLACK_CHANNEL",
             "type": "Text",
@@ -85,9 +61,6 @@
         "type": "JenkinsDocker",
         "shell": "#!/bin/bash
 export INIT_START_TIME=$(date +\"%s\")
-export PHONE=\"#PHONE#\"
-export TXT=\"#TXT#\"
-export EMAIL=\"#EMAIL#\"
 export SLACK_CHANNEL=\"#SLACK_CHANNEL#\"
 export MESSAGE=\"#MESSAGE#\"
 set +x
@@ -115,7 +88,7 @@ INIT_END_TIME=$(date +\"%s\")
 INIT_EST_TIME=$(($INIT_END_TIME-$INIT_START_TIME))
 echo -e \"Notification runtime of `date -u -d @\"$INIT_EST_TIME\" +\'%-Mm %-Ss\'`\"
 
-echo \"Notification result was $RESULT with $PHONE, $TXT, $EMAIL: '$MESSAGE'\" >> $ARCHIVE_DIR/notification.txt
+echo \"Notification result was $RESULT with $SLACK_CHANNEL: '$MESSAGE'\" >> $ARCHIVE_DIR/notification.txt
 if [ $RESULT -ne 0 ]; then 
     exit $RESULT
 fi

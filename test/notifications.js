@@ -152,7 +152,7 @@ describe('Send notifications', function(){
 
     this.timeout(100000);
 
-    if ( process.env.EMAIL ) {
+/*    if ( process.env.EMAIL ) {
         it('One or more email addresses are specified', function(done){
             console.log("EMAIL is " + process.env.EMAIL);
             notificationParams = getEmailNotificationParms(notificationParams);
@@ -259,7 +259,7 @@ describe('Send notifications', function(){
     } else {
         it('No text numbers specified', function(done) {done();});
     }
-
+*/
     if ( process.env.SLACK_CHANNEL ) {
         notificationParams = getSlackNotificationParms(notificationParams);
         for (var i = 0; i < notificationParams.recipient_info.length; i++) {
