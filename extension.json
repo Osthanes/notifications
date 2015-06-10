@@ -27,28 +27,6 @@
             "default_value": "",
             "label_key": "MESSAGE_KEY",
             "desc_key": "MESSAGE_DESC"
-        },
-        {
-            "name": "ONLY_NOTIFY",
-            "type": "Text",
-            "required": "false",
-            "default_value": "ANY",
-            "label_key": "ONLY_NOTIFY_KEY",
-            "desc_key": "ONLY_NOTIFY_DESC",
-            "options": [
-                {
-                    "label_key": "ANY_KEY",
-                    "value": "ANY"
-                },
-                { 
-                    "label_key": "SUCCESS_KEY",
-                    "value": "SUCCESS" 
-                },
-                { 
-                    "label_key": "FAILURE_KEY",
-                    "value": "FAILURE"
-                }
-            ]
         }
     ],
     "outputs": [
@@ -63,7 +41,7 @@
 export INIT_START_TIME=$(date +\"%s\")
 export SLACK_CHANNEL=\"#SLACK_CHANNEL#\"
 export MESSAGE=\"#MESSAGE#\"
-export ONLY_NOTIFY=\"#ONLY_NOTIFY#\"
+export ONLY_NOTIFY=\"ANY\"
 set +x
 set +e
 # OSSC line
