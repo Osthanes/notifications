@@ -27,28 +27,6 @@
             "default_value": "",
             "label_key": "MESSAGE_KEY",
             "desc_key": "MESSAGE_DESC"
-        },
-        {
-            "name": "ONLY_NOTIFY",
-            "type": "Text",
-            "required": "false",
-            "default_value": "ANY",
-            "label_key": "ONLY_NOTIFY_KEY",
-            "desc_key": "ONLY_NOTIFY_DESC",
-            "options": [
-                {
-                    "label_key": "ANY_KEY",
-                    "value": "ANY"
-                },
-                { 
-                    "label_key": "SUCCESS_KEY",
-                    "value": "SUCCESS" 
-                },
-                { 
-                    "label_key": "FAILURE_KEY",
-                    "value": "FAILURE"
-                }
-            ]
         }
     ],
     "outputs": [
@@ -63,7 +41,7 @@
 export INIT_START_TIME=$(date +\"%s\")
 export SLACK_CHANNEL=\"#SLACK_CHANNEL#\"
 export MESSAGE=\"#MESSAGE#\"
-export ONLY_NOTIFY=\"#ONLY_NOTIFY#\"
+#export ONLY_NOTIFY=\"ANY\"
 set +x
 set +e
 # OSSC line
@@ -72,31 +50,31 @@ if [[ $DEBUG -eq 1 ]]; then
     dpkg -l | grep '^ii' > $EXT_DIR/pkglist2
     diff $EXT_DIR/pkglist $EXT_DIR/pkglist2
 fi
-if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
-    if [ \"$NOTIFY_JOB_STATUS\" -eq 0 ]; then
-        #success
-        if [ \"$ONLY_NOTIFY\" == \"FAILURE\" ]; then
-            echo -e \"Notification not running.  Previous job returned success and notification is set to only notify on failure.\"
-            exit $NOTIFY_JOB_STATUS
-        fi
-    else
-        #failure
-        if [ \"$ONLY_NOTIFY\" == \"SUCCESS\" ]; then
-            echo -e \"Notification not running.  Previous job returned failure and notification is set to only notify on success.\"
-            exit $NOTIFY_JOB_STATUS
-        fi
-    fi
-else
-    #no value set for previous job return code
-    if [ \"$ONLY_NOTIFY\" == \"FAILURE\" ]; then
-        echo -e \"Notification not running.  No value was set for NOTIFY_JOB_STATUS and notify is set to only notify on failure\"
-        exit $NOTIFY_JOB_STATUS
-    fi    
-    if [ \"$ONLY_NOTIFY\" == \"SUCCESS\" ]; then
-        echo -e \"Notification not running.  No value was set for NOTIFY_JOB_STATUS and notify is set to only notify on success\"
-        exit $NOTIFY_JOB_STATUS
-    fi    
-fi
+#if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
+#    if [ \"$NOTIFY_JOB_STATUS\" -eq 0 ]; then
+#        #success
+#        if [ \"$ONLY_NOTIFY\" == \"FAILURE\" ]; then
+#            echo -e \"Notification not running.  Previous job returned success and notification is set to only notify on failure.\"
+#            exit $NOTIFY_JOB_STATUS
+#        fi
+#    else
+#        #failure
+#        if [ \"$ONLY_NOTIFY\" == \"SUCCESS\" ]; then
+#            echo -e \"Notification not running.  Previous job returned failure and notification is set to only notify on success.\"
+#            exit $NOTIFY_JOB_STATUS
+#        fi
+#    fi
+#else
+#    #no value set for previous job return code
+#    if [ \"$ONLY_NOTIFY\" == \"FAILURE\" ]; then
+#        echo -e \"Notification not running.  No value was set for NOTIFY_JOB_STATUS and notify is set to only notify on failure\"
+#        exit $NOTIFY_JOB_STATUS
+#    fi    
+#    if [ \"$ONLY_NOTIFY\" == \"SUCCESS\" ]; then
+#        echo -e \"Notification not running.  No value was set for NOTIFY_JOB_STATUS and notify is set to only notify on success\"
+#        exit $NOTIFY_JOB_STATUS
+#    fi    
+#fi
 
 if [[ $DEBUG -eq 1 ]]; then
     dpkg -l | grep '^ii' > $EXT_DIR/pkglist
@@ -119,9 +97,9 @@ echo \"Notification result was $RESULT with $SLACK_CHANNEL: '$MESSAGE'\" >> $ARC
 if [ $RESULT -ne 0 ]; then 
     exit $RESULT
 fi
-if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
-    exit $NOTIFY_JOB_STATUS
-fi
+#if [ -n \"$NOTIFY_JOB_STATUS\" ]; then
+#    exit $NOTIFY_JOB_STATUS
+#fi
 "
     }
     },
