@@ -108,36 +108,40 @@ export latest_cf_version=$(${EXT_DIR}/bin/cf --version)
 echo "Container Cloud Foundry CLI Version: ${container_cf_version}"
 echo "Latest Cloud Foundry CLI Version: ${latest_cf_version}"
 
-#################################
-# Set Bluemix Host Information  #
-#################################
-if [ -n "$BLUEMIX_TARGET" ]; then
+##########################################
+# setup bluemix env information 
+##########################################
+CF_API=`cf api`
+if [ $? -eq 0 ]; then
+    # find the bluemix api host
+    export BLUEMIX_API_HOST=`echo $CF_API  | awk '{print $3}' | sed '0,/.*\/\//s///'`
+    echo $BLUEMIX_API_HOST | grep 'stage1'
+    if [ $? -eq 0 ]; then
+        # on staging, make sure bm target is set for staging
+        export BLUEMIX_TARGET="staging"
+    else
+        # on prod, make sure bm target is set for prod
+        export BLUEMIX_TARGET="prod"
+    fi
+elif [ -n "$BLUEMIX_TARGET" ]; then
+    # cf not setup yet, try manual setup
     if [ "$BLUEMIX_TARGET" == "staging" ]; then 
-        export CCS_API_HOST="api-ice.stage1.ng.bluemix.net" 
-        export CCS_REGISTRY_HOST="registry-ice.stage1.ng.bluemix.net"
+        echo -e "Targetting staging Bluemix"
         export BLUEMIX_API_HOST="api.stage1.ng.bluemix.net"
-        export ICE_CFG="ice-cfg-staging.ini"
     elif [ "$BLUEMIX_TARGET" == "prod" ]; then 
         echo -e "Targetting production Bluemix"
-        export CCS_API_HOST="api-ice.ng.bluemix.net" 
-        export CCS_REGISTRY_HOST="registry-ice.ng.bluemix.net"
         export BLUEMIX_API_HOST="api.ng.bluemix.net"
-        export ICE_CFG="ice-cfg-prod.ini"
     else 
-        echo -e "${red}Unknown Bluemix environment specified"
+        echo -e "${red}Unknown Bluemix environment specified${no_color}" | tee -a "$ERROR_LOG_FILE"
     fi 
 else 
     echo -e "Targetting production Bluemix"
-    export CCS_API_HOST="api-ice.ng.bluemix.net" 
-    export CCS_REGISTRY_HOST="registry-ice.ng.bluemix.net"
     export BLUEMIX_API_HOST="api.ng.bluemix.net"
-    export ICE_CFG="ice-cfg-prod.ini"
-    export BLUEMIX_TARGET="prod"
-fi  
+fi
 
-################################
-# Login to Container Service   #
-################################
+##########################
+# Check bluemix login    #
+##########################
 if [ -n "$BLUEMIX_USER" ] || [ ! -f ~/.cf/config.json ]; then
     # need to gather information from the environment 
     # Get the Bluemix user and password information 
@@ -166,7 +170,6 @@ if [ -n "$BLUEMIX_USER" ] || [ ! -f ~/.cf/config.json ]; then
     echo "BLUEMIX_PASSWORD: xxxxx"
     echo ""
 fi 
-
 
 ########################
 # Setup git_retry      #
