@@ -111,8 +111,10 @@ echo "Latest Cloud Foundry CLI Version: ${latest_cf_version}"
 ##########################################
 # setup bluemix env information 
 ##########################################
-CF_API=`cf api`
-if [ $? -eq 0 ]; then
+CF_API=$(${EXT_DIR}/cf api)
+RESULT=$?
+debugme echo "CF_API: ${CF_API}"
+if [ $RESULT -eq 0 ]; then
     # find the bluemix api host
     export BLUEMIX_API_HOST=`echo $CF_API  | awk '{print $3}' | sed '0,/.*\/\//s///'`
     echo $BLUEMIX_API_HOST | grep 'stage1'
